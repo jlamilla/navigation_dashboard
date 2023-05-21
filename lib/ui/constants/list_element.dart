@@ -18,26 +18,7 @@ class ListElement{
   static const List<String> userState= [Strings.userActive, Strings.userInactive, Strings.userPending];
   static const List<String> orderState = [Strings.orderPending, Strings.orderPaid, Strings.orderDispatched, Strings.orderCancel, Strings.orderComplete];
   // Elements Type
-  static const List<ProductSites> productSite = [ 
-    ProductSites('01', '${Strings.siteProduct} 1'), 
-    ProductSites('02', '${Strings.siteProduct} 2'),
-    ProductSites('03', '${Strings.siteProduct} 3'),
-    ProductSites('04', '${Strings.siteProduct} 4'),
-    ProductSites('05', '${Strings.siteProduct} 5'),
-    ProductSites('06', '${Strings.siteProduct} 6'),
-    ProductSites('07', '${Strings.siteProduct} 7'),
-    ProductSites('08', '${Strings.siteProduct} 8'),
-    ProductSites('09', '${Strings.siteProduct} 9'),
-    ProductSites('10', '${Strings.siteProduct} 10'),
-    ProductSites('11', '${Strings.siteProduct} 11'),
-    ProductSites('12', '${Strings.siteProduct} 12'),
-    ProductSites('13', '${Strings.siteProduct} 13'),
-    ProductSites('14', '${Strings.siteProduct} 14'),
-    ProductSites('15', '${Strings.siteProduct} 15'),
-    ProductSites('16', '${Strings.siteProduct} 16'),
-    ProductSites('17', '${Strings.siteProduct} 17'),
-    ProductSites('18', '${Strings.siteProduct} 18'),
-    ];
+  static const List<String> productSite = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18'];
   static const List<String> rol = [Roles.admin, Roles.seller, Roles.warehouseAssistant, Roles.commercial];
   //Categories Images Card
   static const List<String> userCategoryImage= [Images.userActivate, Images.userInactivate, Images.userPending];
@@ -51,7 +32,7 @@ class ListElement{
   static const List<Color?> dashboardCategoryColor= [primaryLightColor, white, white];
   static const List<Color?> productCategoryColor = [primaryLightColor, successColor, grey, buttonC];
   static const List<Color?> userCategoryColor= [primaryLightColor, successColor, grey, buttonC];
-  static const List<Color?> orderCategoryColor = [primaryLightColor, buttonC, buttonG, secondaryLightColor, grey, successColor];
+  static const List<Color?> orderCategoryColor = [primaryLightColor, buttonC, buttonB, buttonG, buttonH, successColor];
   //Colombia
   static const List<DepartmentCityType> departmentMunicipal = DepartmentCityType.values;
 
@@ -68,8 +49,20 @@ enum CardColorUserState{
   const CardColorUserState({required this.state, required this.color, required this.image});
 }
 
+enum CardColorOrderState{
+  orderPending(state: Strings.orderPending, color: buttonC, image:  Images.orderPending),
+  orderPaid( state: Strings.orderPaid, color: buttonB, image:  Images.orderPaid ),
+  orderDispatched( state: Strings.orderDispatched, color: buttonG, image:  Images.orderDispatched ),
+  orderCancel( state: Strings.orderCancel, color: buttonH, image:  Images.orderCancel ),
+  orderComplete( state: Strings.orderComplete, color: successColor, image:  Images.orderComplete );
+
+  final String state;
+  final Color color;
+  final String image;
+  const CardColorOrderState({required this.state, required this.color, required this.image});
+}
+
 enum DepartmentCityType{
-  select(department: '', municipal: []),
   amazonas(department: 'Amazonas', municipal: [ 'Leticia', 'El Encanto', 'La Chorrera', 'La Pedrera', 'La Victoria', 'Puerto Arica', 'Puerto Nariño', 'Puerto Santander', 'Tarapacá', 'Puerto Alegría', 'Miriti Paraná',]),
   antioquia(department: 'Antioquia', municipal: ['Medellín','Abejorral','Abriaquí','Alejandría','Amagá','Amalfi','Andes','Angelópolis','Angostura','Anorí','Anza','Apartadó','Arboletes','Argelia','Armenia','Barbosa','Bello','Betania','Betulia','Ciudad Bolívar','Briceño','Buriticá','Cáceres','Caicedo','Caldas','Campamento','Cañasgordas','Caracolí','Caramanta','Carepa','Carolina','Caucasia','Chigorodó','Cisneros','Cocorná','Concepción','Concordia','Copacabana','Dabeiba','Don Matías','Ebéjico','El Bagre','Entrerrios','Envigado','Fredonia','Giraldo','Girardota','Gómez Plata','Guadalupe','Guarne','Guatapé','Heliconia','Hispania','Itagui','Ituango','Belmira','Jericó','La Ceja','La Estrella','La Pintada','La Unión','Liborina','Maceo','Marinilla','Montebello','Murindó','Mutatá','Nariño','Necoclí','Nechí','Olaya','Peñol','Peque','Pueblorrico','Puerto Berrío','Puerto Nare','Puerto Triunfo','Remedios','Retiro','Rionegro','Sabanalarga','Sabaneta','Salgar','San Francisco','San Jerónimo','San Luis','San Pedro','San Rafael','San Roque','San Vicente','Santa Bárbara','Santo Domingo','El Santuario','Segovia','Sopetrán','Támesis','Tarazá','Tarso','Titiribí','Toledo','Turbo','Uramita','Urrao','Valdivia','Valparaíso','Vegachí','Venecia','Yalí','Yarumal','Yolombó','Yondó','Zaragoza','San Pedro de Uraba','Santafé de Antioquia','Santa Rosa de Osos','San Andrés de Cuerquía','Vigía del Fuerte','San José de La Montaña','San Juan de Urabá','El Carmen de Viboral','San Carlos','Frontino','Granada','Jardín','Sonsón', ]),
   arauca(department: 'Arauca', municipal: ['Arauquita','Cravo Norte','Fortul','Puerto Rondón','Saravena','Tame','Arauca',]),

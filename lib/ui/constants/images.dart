@@ -1,5 +1,6 @@
 class Images {
   static const noPhoto = '../assets/images/noPhoto.png';
+  static const noPhotoError404 = '../assets/images/noPhotoError404.png';
   static const loading = '../assets/images/loading.gif';
   static const logo = '../assets/images/logo.png';
   static const logoWithText = '../assets/images/logoWithText.png';
@@ -21,10 +22,10 @@ class Images {
   //End Users
   //Start Orders
   //Image state Order
-    static const orderCancel = '../assets/images/noPhotoUserActivate.png';
-    static const orderComplete = '../assets/images/noPhotoUserActivate.png';
-    static const orderDispatched = '../assets/images/noPhotoUserActivate.png';
-    static const orderPaid = '../assets/images/noPhotoUserActivate.png';
-    static const orderPending = '../assets/images/noPhotoUserActivate.png';
+    static const orderCancel = '../assets/images/orderCancel.png';
+    static const orderComplete = '../assets/images/orderComplete.png';
+    static const orderDispatched = '../assets/images/orderDispatched.png';
+    static const orderPaid = '../assets/images/orderPaid.png';
+    static const orderPending = '../assets/images/orderPending.png';
   //End Orders
 }

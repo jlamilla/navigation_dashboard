@@ -7,44 +7,25 @@ import 'package:navigation_dashboard/domain/models/order/repository/order_reposi
 import 'package:navigation_dashboard/domain/models/product/product_model.dart';
 import 'package:navigation_dashboard/infrastructure/driven_adapter/db/firebase/order/error/order_db_error.dart';
 import 'package:navigation_dashboard/infrastructure/helpers/collections.dart';
+import 'package:navigation_dashboard/infrastructure/helpers/fields.dart';
+import 'package:navigation_dashboard/infrastructure/helpers/formatter.dart';
 
 class OrderFirestore extends OrderRepository{
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
-  Future addOrder(model.Order order) async{
-    try {
-      await _firestore.collection(Collections.orders).doc(order.id).set(order.toMap());
-    } catch (e) {
-      log(e.toString());
-      throw AddOrderDbError();
-    }
-  }
-
-  @override
-  Future addOrderDetails(String orderId, List<OrderDetails> orderDetails) async{
-    try {
-      for(int i = 0; i < orderDetails.length; i++){
-        await _firestore.collection(Collections.orders).doc(orderId).collection(Collections.ordersDetails).doc().set(orderDetails[i].toMap());
-      }
-    } catch (e) {
-      log(e.toString());
-      throw AddOrderDbError();
-    }
-  }
-
-  @override
-  Stream <model.Order> getOrders() async*{
+  Future <List<model.Order>> getOrders() async{
     try{
-      await for(final ordersData in _firestore.collection(Collections.orders).snapshots()){
+      final orders = <model.Order>[];
+      final ordersData = await _firestore.collection(Collections.orders).get();
         for(final order in ordersData.docs){
           final temp = model.Order.fromMap(order.data());
           temp.id = order.id;
-          yield temp;
+          orders.add(temp);
         }
-      }
-    }catch (e){
+      return orders;
+    }catch(e){
       log(e.toString());
       throw GetOrdersDbError();
     }
@@ -53,12 +34,14 @@ class OrderFirestore extends OrderRepository{
   @override
   Future <List<OrderDetails>> getOrdersDetails(String orderId) async{
     try{
-      List<OrderDetails> orders = [];
+      List<OrderDetails> orderItems = [];
       final ordersData = await _firestore.collection(Collections.orders).doc(orderId).collection(Collections.ordersDetails).get();
-      for(var order in ordersData.docs){
-        orders.add(OrderDetails.fromMap(order.data()));
+      for(var item in ordersData.docs){
+        final tempItem = OrderDetails.fromMap(item.data());
+        tempItem.id = item.id;
+        orderItems.add(tempItem);
       }
-      return orders;
+      return orderItems;
     }catch (e){
       log(e.toString());
       throw GetOrderDetailsDbError();
@@ -68,7 +51,7 @@ class OrderFirestore extends OrderRepository{
   @override
   Future updateOrder(model.Order order) async{
     try{
-      await _firestore.collection(Collections.orders).doc(order.id).update({'status': order.state,'dateUpdate': Timestamp.now()});
+      await _firestore.collection(Collections.orders).doc(order.id).update({'state': order.state,'dateUpdate': order.dateUpdate});
     }catch(e){
       log(e.toString());
       throw UpdateOrderDbError();
@@ -86,13 +69,15 @@ class OrderFirestore extends OrderRepository{
           final String idProductSize = item.reference+item.pinta+item.size;
 
           final size = await _firestore.collection(Collections.products).doc(idProduct).collection(Collections.productsSizes).doc(idProductSize).get();
-          final sizeItem = ProductSize.fromMap(size.data()!);
+          if(size.data() != null){
 
-          amount = sizeItem.amount + item.amount;
+            final sizeItem = ProductSize.fromMap(size.data()!);
+            amount = sizeItem.amount + item.amount;
 
-          await _firestore.collection(Collections.products).doc(idProduct).collection(Collections.productsSizes).doc(idProductSize).
-                update({'amount': amount,'quantityUpdateDate': Timestamp.now()});
-                
+            await _firestore.collection(Collections.products).doc(idProduct).collection(Collections.productsSizes).doc(idProductSize).
+                  update({'amount': amount,'quantityUpdateDate': Formatter.dateFormat()});  
+          }
+
           await _firestore.collection(Collections.orders).doc(orderId).collection(Collections.ordersDetails).doc(item.id).delete();
 
         }

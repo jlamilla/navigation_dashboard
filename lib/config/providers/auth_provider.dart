@@ -7,6 +7,7 @@ import 'package:navigation_dashboard/domain/use_cases/user/user_use_case.dart';
 import 'package:navigation_dashboard/infrastructure/driven_adapter/db/firebase/auth/auth_db.dart';
 import 'package:navigation_dashboard/infrastructure/driven_adapter/db/firebase/user/user_db.dart';
 import 'package:navigation_dashboard/infrastructure/helpers/app_persistent_store.dart';
+import 'package:navigation_dashboard/ui/constants/roles.dart';
 import 'package:navigation_dashboard/ui/constants/strings.dart';
 
 final authProvider = StateNotifierProvider<AuthNotifier, User?>((ref) => AuthNotifier());
@@ -28,35 +29,41 @@ class AuthNotifier extends StateNotifier<User?>{
     userProfile = user;
   }
 
-  Future <bool> createUserWithEmailAndPassword() async{
-    uid = await _auth.createUserWithEmailAndPassword(email, password);
-    return uid.isNotEmpty;
+  Future <Map<String, bool>> createUserWithEmailAndPassword() async{
+    return await _auth.createUserWithEmailAndPassword(email, password);
   }
 
-  Future <bool> signInEmailandPassword(BuildContext context) async {
+  Future <int> signInEmailandPassword() async {
+
+    //0 user no exist
+    //1 user pending
+    //2 user inactivate
+    //3 user not admin not commercial
+    //4 user email and password error
+    //5 success
 
     //validate user exists
-
     bool user = await validateUser();
-
-    if(!user && context.mounted){
-      //AlertCustom(context: context).scaffoldMessenger(Strings.errorAlert, Strings.errorUser, ContentType.failure);
-      return false;
+    if(!user){
+      return 0;
     }
-    //validate state user activate
-    if(!validateUserState(context) && context.mounted){
-      return false;
+    //validate role user
+    if(state?.rol.compareTo(Roles.admin) == 0 || state?.rol.compareTo(Roles.commercial) == 0){
+      //validate state user activate
+      final stateUser = validateUserState();
+      if(stateUser != 4){
+        return stateUser;
+      }
+      //validate if the email and password are correct
+      final String userId = await _auth.signInEmailandPassword(email,password);
+      if(userId.isEmpty){
+        return 4;
+      }
+      //save user id in data persistence
+      AppPersistentStore.setUserId(userId);
+      return 5;
     }
-    //validate if the email and password are correct
-    final String userId = await _auth.signInEmailandPassword(email,password);
-
-    if(userId.isEmpty && context.mounted){
-      //AlertCustom(context: context).scaffoldMessenger(Strings.errorAlert, Strings.signInValidate, ContentType.failure);
-      return false;
-    }
-    //save user id in data persistence
-    AppPersistentStore.setUserId(userId);
-    return true;
+    return 3;
   }
 
   Future <bool> validateUser() async {
@@ -64,19 +71,17 @@ class AuthNotifier extends StateNotifier<User?>{
     return state != null;
   }
 
-  bool validateUserState(BuildContext context)  {
-
+  int validateUserState()  {
+    
     if(state!.state == Strings.userPending){
-      //AlertCustom(context: context).scaffoldMessenger(Strings.warningAlert, Strings.userAlertPending, ContentType.help);
-      return false;
+      return 1;
     }
 
     if(state!.state == Strings.userInactive){
-      //AlertCustom(context: context).scaffoldMessenger(Strings.errorAlert, Strings.userAlertInactive, ContentType.failure);
-      return false;
+      return 2;
     }
 
-    return true;
+    return 4;
   }
 
   Future <bool> signOut() async {

@@ -10,6 +10,7 @@ class Fields {
   static const dateCreate = 'Fecha de creación';
   static const dateUpdate = 'Fecha de actualización';
   static const amountProduct = 'Cantidad de prendas';
+  static const units = 'Unidades';
   static const reference = 'Referencia';
   static const pinta = 'Pinta';
 	static const pintaDescription = 'Color';

@@ -13,7 +13,7 @@ class Validations{
               
               return regExp.hasMatch(value ?? '')
                 ? null
-                : 'El valor ingresado no luce como \n un correo';
+                : 'El valor ingresado no luce como un correo';
   
   }
 
@@ -50,7 +50,7 @@ class Validations{
   }
   static String? validateSelectProductSize( String? value ) {
               if(value != null && value.isNotEmpty){
-                if(ListElement.productSite.where((item) =>  0 == item.name.compareTo(value)).toList().isEmpty){
+                if(ListElement.productSite.where((item) =>  0 == '${Strings.siteProduct} $item'.compareTo(value)).toList().isEmpty){
                   return Strings.validateSelect; 
                 }
               }else{
@@ -113,8 +113,8 @@ class Validations{
   static String? validateReference( value ) {
 
               if(value != null){
-                if(value.length < 7){
-                  return 'La referencia debe de tener 7 caracteres';
+                if(value.length < 6){
+                  return 'La referencia debe de tener 6 caracteres';
                 }
               }
               return null;

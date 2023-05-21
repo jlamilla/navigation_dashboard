@@ -10,6 +10,8 @@ class Order {
     required this.fullname,
     required this.address,
     required this.numberPhone,
+    required this.department,
+    required this.city,
     required this.email,
     required this.total,
     required this.state,
@@ -23,6 +25,8 @@ class Order {
   String fullname;
   String address;
   String numberPhone;
+  String department;
+  String city;
   String email;
   String total;
   String state;
@@ -35,6 +39,8 @@ class Order {
     fullname: json['fullname'],
     address: json['address'],
     numberPhone: json['numberPhone'],
+    department: json['department'],
+    city: json['city'],
     email: json['email'],
     total: json['total'],
     state: json['state'],
@@ -48,6 +54,8 @@ class Order {
     'fullname': fullname,
     'address': address,
     'numberPhone': numberPhone,
+    'department': department,
+    'city': city,
     'email': email,
 		'total': total,
 		'state': state,

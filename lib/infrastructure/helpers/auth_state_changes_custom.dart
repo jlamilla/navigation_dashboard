@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:navigation_dashboard/config/providers/auth_provider.dart';
 import 'package:navigation_dashboard/config/providers/user_provider.dart';
 import 'package:navigation_dashboard/domain/models/user/user_model.dart';
+import 'package:navigation_dashboard/ui/constants/strings.dart';
+import 'package:navigation_dashboard/ui/pages/auth/auth_page.dart';
 import 'package:navigation_dashboard/ui/widgets/web/drawer/drawer_menu.dart';
 import 'package:navigation_design/pages/sizes_pages.dart';
-import '../../ui/constants/strings.dart';
-import '../../ui/pages/auth/auth_screen.dart';
 import 'app_screen.dart';
 
 
@@ -25,7 +25,7 @@ class AuthStateChangesCustom extends ConsumerWidget {
           if(snapshot.hasData){
             return const _StreamUserProfile();
           }else{
-            return const AuthScreen();
+            return const AuthPage();
           }
         }
     );

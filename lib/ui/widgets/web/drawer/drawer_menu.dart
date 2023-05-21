@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:navigation_dashboard/config/providers/auth_provider.dart';
 import 'package:navigation_dashboard/config/providers/drawer_provider.dart';
+import 'package:navigation_dashboard/ui/constants/roles.dart';
 import 'package:navigation_dashboard/ui/constants/strings.dart';
 import 'package:navigation_dashboard/ui/widgets/web/app_bar/profile_info.dart';
 import 'package:navigation_dashboard/ui/widgets/web/app_bar/search_field.dart';
@@ -12,7 +13,8 @@ class DrawerMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final int index = ref.watch(drawerIndexProvider);
+    final index = ref.watch(drawerIndexProvider);
+    final user = ref.watch(authProvider.notifier).userProfile;
     return NavigationView(
         appBar: const NavigationAppBar(
           title: Text(Strings.navigation),
@@ -22,16 +24,8 @@ class DrawerMenu extends ConsumerWidget {
           selected: index,
           displayMode: PaneDisplayMode.auto,
           onChanged: (i) => ref.read(drawerIndexProvider.notifier).update((state) => state = i),
-          items: DrawerList.items,
+          items: user.rol.compareTo(Roles.admin) == 0 ? DrawerList.itemsAdmin : DrawerList.itemsCommercial,
           footerItems: [
-            PaneItem(
-              title: const Text(Strings.settings, style: TextStyle(fontSize: 16),), 
-              icon: const Icon(FluentIcons.settings), 
-              body: const NavigationBodyItem(
-                      header: Strings.settings,
-                      content: Text(Strings.settings),
-                    ),
-            ),
             PaneItemAction(
               title: const Text(Strings.signOut, style: TextStyle(fontSize: 16),), 
               icon: const Icon(FluentIcons.sign_out),

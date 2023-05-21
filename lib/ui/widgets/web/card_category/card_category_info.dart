@@ -20,10 +20,11 @@ class CardCategoryInfo extends ConsumerWidget {
       padding: const EdgeInsets.only(top: 16.0, bottom: 16.0, right: 19.0),
       child: GestureDetector(
         onTap: () {
-          final int index = ref.watch(drawerIndexProvider);
-          if(index == 1){
+          final index = ref.watch(drawerIndexProvider);
+          final indexType = ref.watch(drawerIndexTypeProvider);
+          if(index == indexType.products){
             ref.read(searchProductsCategoryProvider.notifier).update((state) => state = info.title!);
-          }else if(index == 5){
+          }else if(index == indexType.users){
             ref.read(searchUsersCategoryProvider.notifier).update((state) => state = info.title!);
           }else{
             ref.read(searchOrdersCategoryProvider.notifier).update((state) => state = info.title!);
@@ -38,30 +39,42 @@ class CardCategoryInfo extends ConsumerWidget {
             alignment : AlignmentDirectional.centerStart,
             children: [
               CardImageCategoryBackground(color: info.color!, image: info.imageCategory!,),
-              Positioned(
-                left: positionedCount,
-                child: Text(
-                  info.count.toString(), 
-                  style: const TextStyle(
-                    color: black,
-                    fontSize: 18, 
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'Roboto'
-                  ),
-                ),
-              ),
-              Positioned(
-                left: positionedTitle,
-                child: Text(
-                  info.title! != Strings.allStates 
-                  ? '${info.title!.toUpperCase()}S'
-                  : info.title!.toUpperCase(), 
-                  style: const TextStyle(
-                    color: black,
-                    fontSize: 18.5, 
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'Roboto'
-                  ),
+              SizedBox(
+                height: 50,
+                width: double.infinity,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(width: 7),
+                    Expanded(
+                      flex: 3,
+                      child: Text(
+                        info.count.toString(), 
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: black,
+                          fontSize: 18, 
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Roboto',
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 5,
+                      child: Text(
+                        info.title! != Strings.allStates 
+                        ? '${info.title!.toUpperCase()}S'
+                        : info.title!.toUpperCase(), 
+                        style: const TextStyle(
+                          color: black,
+                          fontSize: 18.5, 
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Roboto'
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
           ]),

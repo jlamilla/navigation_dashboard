@@ -5,10 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
 final photoProvider = StateNotifierProvider.autoDispose<PhotoNotifier,XFile?>((ref) => PhotoNotifier());
+final photoURLProvider = StateProvider.autoDispose<String>((ref) => '');
 
 class PhotoNotifier extends StateNotifier<XFile?> {
-
-  String photoURL='';
 
   PhotoNotifier():super(null);
 

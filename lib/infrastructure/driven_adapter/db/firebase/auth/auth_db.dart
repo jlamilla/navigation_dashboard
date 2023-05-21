@@ -10,18 +10,22 @@ class AuthFirebase extends AuthRepository{
   final _auth = auth.FirebaseAuth.instance;
 
   @override
-  Future <String> addSessionUser(String email, String password) async{
+  Future <Map<String,bool>> addSessionUser(String email, String password) async{
+    bool validate = true;
+    String uid = '';
     auth.UserCredential? userCredential;
     try {
       userCredential = await _auth.createUserWithEmailAndPassword( email: email , password: password);
     } on auth.FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        log(Strings.validatePassword);
-      } else if (e.code == 'email-already-in-use') {
+      if (e.code == 'email-already-in-use') {
         log(Strings.validateEmail);
+        validate = false;
       }
     }
-    return (userCredential != null && userCredential.user != null) ? userCredential.user!.uid : '';
+    if(userCredential != null && userCredential.user != null){
+      uid = userCredential.user!.uid;
+    }
+    return  { uid : validate };
   }
 
   @override
@@ -62,7 +66,7 @@ class AuthFirebase extends AuthRepository{
       });
     } on auth.FirebaseAuthException catch (e){
       log(e.toString());
-      throw RestorePasswordDbError();
+      return false;
     }
     return validateComplete;
   }

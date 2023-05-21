@@ -30,7 +30,7 @@ static pintaProduct(){
   return MaskTextInputFormatter(mask: '##',filter: {"#":RegExp(r'[0-9]')});
 }
 static referenceProduct(){
-  return MaskTextInputFormatter(mask: '#######',filter: {"#":RegExp(r'^[a-zA-Z0-9]+$')});
+  return MaskTextInputFormatter(mask: '###########',filter: {"#":RegExp(r'^[a-zA-Z0-9]+$')});
 }
 static dni(){
   return MaskTextInputFormatter(mask: '##########',filter: {"#":RegExp(r'[0-9]')});

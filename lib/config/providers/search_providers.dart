@@ -5,6 +5,7 @@ import 'package:navigation_dashboard/domain/models/order/order_model.dart';
 import 'package:navigation_dashboard/domain/models/product/product_model.dart';
 import 'package:navigation_dashboard/domain/models/user/user_model.dart';
 import 'package:navigation_dashboard/infrastructure/helpers/formatter.dart';
+import 'package:navigation_dashboard/ui/constants/roles.dart';
 import 'package:navigation_dashboard/ui/constants/strings.dart';
 
 enum SearchTitle{
@@ -23,11 +24,12 @@ enum SearchTitle{
 
 final searchNotifierProvider = StateNotifierProvider.autoDispose.family((ref, List<dynamic> data) {
   final String search = ref.watch(searchProvider);
-  final int index = ref.watch(drawerIndexProvider);
+  final index = ref.watch(drawerIndexProvider);
+  final indexType = ref.watch(drawerIndexTypeProvider);
   final String searchCategory;
-  if(index == 1){
+  if(index == indexType.products){
     searchCategory = ref.watch(searchProductsCategoryProvider);
-  }else if(index == 5){
+  }else if(index == indexType.users){
     searchCategory = ref.watch(searchUsersCategoryProvider);
   }else{
     searchCategory = ref.watch(searchOrdersCategoryProvider);
@@ -45,6 +47,17 @@ class SearchNotifier extends StateNotifier<List<dynamic>>{
   SearchNotifier( super.state, {required this.search, required this.searchCategory,} );
   final String search;
   final String searchCategory;
+
+  List<User> filterUserRole(String userRole) {
+
+    List<User> users = state.cast<User>();
+
+    if(userRole.compareTo(Roles.commercial)==0){
+      users = users.where((u) => 0 == u.rol.compareTo(Roles.seller)).toList();
+    }
+
+    return users;
+  }
 
   List<User> filterUser() {
     List<User> users = state.cast<User>();

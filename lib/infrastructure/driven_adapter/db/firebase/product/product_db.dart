@@ -22,7 +22,6 @@ class ProductFirestore extends ProductRepository{
 
   @override
   Future <List<Product>> getProducts() async{
-
     try{
       final products = <Product>[];
       final productsData = await _firestore.collection(Collections.products).get();
@@ -146,7 +145,10 @@ class ProductFirestore extends ProductRepository{
   Future updateSizes(String idProduct, List<ProductSize> sizes) async{
     try{
       for(ProductSize size in sizes){
-        await _firestore.collection(Collections.products).doc(idProduct).collection(Collections.productsSizes).doc(idProduct+size.size).update(size.toMap());
+        await _firestore.collection(Collections.products).doc(idProduct).collection(Collections.productsSizes).doc(idProduct+size.size).delete();
+      }
+      for(ProductSize size in sizes){
+        await _firestore.collection(Collections.products).doc(idProduct).collection(Collections.productsSizes).doc(idProduct+size.size).set(size.toMap());
       }
     }catch(e){
       log(e.toString());

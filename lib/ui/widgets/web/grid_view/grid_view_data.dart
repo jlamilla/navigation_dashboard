@@ -5,9 +5,9 @@ import 'package:navigation_dashboard/domain/models/analytic/analytic_data_model.
 import 'package:navigation_dashboard/domain/models/order/order_model.dart';
 import 'package:navigation_dashboard/domain/models/product/product_model.dart';
 import 'package:navigation_dashboard/domain/models/user/user_model.dart';
-import 'package:navigation_dashboard/ui/pages/web/orders/orders_page.dart';
-import 'package:navigation_dashboard/ui/pages/web/products/products_page.dart';
-import 'package:navigation_dashboard/ui/pages/web/users/users_page.dart';
+import 'package:navigation_dashboard/ui/pages/orders/orders_page.dart';
+import 'package:navigation_dashboard/ui/pages/products/products_page.dart';
+import 'package:navigation_dashboard/ui/pages/users/users_page.dart';
 
 class GridViewData extends ConsumerWidget {
   const GridViewData({

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,35 +9,12 @@ import 'package:navigation_dashboard/infrastructure/driven_adapter/db/firebase/p
 import 'package:navigation_dashboard/infrastructure/helpers/formatter.dart';
 import 'package:navigation_dashboard/ui/constants/strings.dart';
 
-final referenceProductProvider = StateProvider.autoDispose<String>((ref) => '');
-final nameProductProvider = StateProvider.autoDispose<String>((ref) => '');
-final descriptionProductProvider = StateProvider.autoDispose<String>((ref) => '');
-final pintaProductProvider = StateProvider.autoDispose<String>((ref) => '');
-final pintaDescriptionProductProvider = StateProvider.autoDispose<String>((ref) => '');
-final priceProductProvider = StateProvider.autoDispose<String>((ref) => '');
-final siteProductProvider = StateProvider.autoDispose<TextEditingController>((ref) =>TextEditingController());
-final photoPathProductProvider = StateProvider.autoDispose<String>((ref) => '');
-final photoURLProductProvider = StateProvider.autoDispose<String>((ref) => '');
-final createDateProductProvider = StateProvider.autoDispose<String>((ref) => '');
-
-final productProvider = StateNotifierProvider.autoDispose((ref) {
-    return ProductNotifier(
-      Product(
-        photoPath: ref.watch(photoPathProductProvider),
-        photoURL: ref.watch(photoURLProductProvider),
-        reference: ref.watch(referenceProductProvider), 
-        name: ref.watch(nameProductProvider), 
-        description: ref.watch(descriptionProductProvider), 
-        pinta: ref.watch(pintaProductProvider), 
-        pintaDescription: ref.watch(pintaDescriptionProductProvider), 
-        price: ref.watch(priceProductProvider), 
-        site: ref.watch(siteProductProvider).text, 
-        state: '',
-        productCreateDate: ref.watch(createDateProductProvider).isEmpty ? Formatter.dateFormat() : ref.watch(createDateProductProvider), 
-        productUpdateDate: Formatter.dateFormat(),
-      )
-    );
+final productProvider = StateNotifierProvider.autoDispose((ref,) {
+    ref.keepAlive();
+    return ProductNotifier();
   });
+
+final productDetailsProvider = StateProvider.autoDispose<Product?>((ref) => null);
 
 final productsFutureProvider = FutureProvider.autoDispose<List<Product>>((ref) async{
       return await ProductUseCase(ProductFirestore()).getAllProducts();
@@ -51,13 +26,13 @@ final productStreamProvider = StreamProvider.autoDispose.family<Product?, String
       }
 },);
 
-class ProductNotifier extends StateNotifier <Product>{
+class ProductNotifier extends StateNotifier <Product?>{
 
   final ProductUseCase _productService = ProductUseCase(ProductFirestore());
   final PhotoUseCase _storageService = PhotoUseCase(PhotoStorage());
   List <ProductSize> sizes =[];
 
-  ProductNotifier(super.state);
+  ProductNotifier():super(null);
 
   int formatterSizes(List <Map<String, TextEditingController>> controllerSizes){
     int validateStateProduct = 0;
@@ -77,60 +52,67 @@ class ProductNotifier extends StateNotifier <Product>{
   }
 
 
-  Future <bool> addProduct(XFile? photo, List <Map<String, TextEditingController>> controllerSizes) async {
-
-    state.id = state.reference + state.pinta;
-    state.pinta = state.pinta.length == 1 ? 'P0${state.pinta}': 'P${state.pinta}';
+  Future <bool> addProduct(XFile? photo, List <Map<String, TextEditingController>> controllerSizes, Product product) async {
+    bool validate = false;
+    product.pinta = product.pinta.length == 1 ? 'P0${product.pinta}': 'P${product.pinta}';
+    product.id = product.reference + product.pinta;
 
     //FORMATTER sizes AND ADD STATE PRODUCT VALIDATE
-    state.state = formatterSizes(controllerSizes) > 0 ? Strings.productAvailable : Strings.productNotAvailable;
+    product.state = formatterSizes(controllerSizes) > 0 ? Strings.productAvailable : Strings.productNotAvailable;
+    //FORMATTER Site
+    product.site = product.site.replaceAll('${Strings.siteProduct} ', '');
 
-    if(photo != null && state.id != null){
+    if(photo != null && product.id != null){
       //ADD PHOTO
-      String photoPath  = await _storageService.uploadPhoto(CollectionStorage.products, state.id! , photo );
+      String photoPath  = await _storageService.uploadPhoto(CollectionStorage.products, product.id! , photo );
       String photoURL = await _storageService.downloadURL(photoPath);
-      state.photoPath = photoPath;
-      state.photoURL = photoURL;
+      product.photoPath = photoPath;
+      product.photoURL = photoURL;
       //ADD PRODUCT
-      await _productService.addProduct(state);
-      //ADD PRODUCT SIZES
-      await _productService.addSizesOfProduct(state.id!, sizes);
-      return true;
+      await _productService.addProduct(product).whenComplete(() => validate = true).onError((error, stackTrace) => validate = false);
+      if(validate){
+        //ADD PRODUCT SIZES
+        await _productService.addSizesOfProduct(product.id!, sizes).whenComplete(() => validate = true).onError((error, stackTrace) => validate = false);
+      }
     }
-  
-    return false;
-
+    return validate;
   }
   
-  Future <bool> updateProduct(XFile? photo, List <Map<String, TextEditingController>> controllerSizes) async {
-    
+  Future <bool> updateProduct(XFile? photo, List <Map<String, TextEditingController>> controllerSizes, Product product) async {
     bool validate = true;
     
     if(photo != null){
       //UPDATE PHOTO
-      await _storageService.deletePhoto(state.photoPath);
-      String photoPath  = await _storageService.uploadPhoto(CollectionStorage.products, state.id! , photo );
+      await _storageService.deletePhoto(product.photoPath);
+      String photoPath  = await _storageService.uploadPhoto(CollectionStorage.products, product.id! , photo );
       String photoURL = await _storageService.downloadURL(photoPath);
-      state.photoPath = photoPath;
-      state.photoURL = photoURL;
+      product.photoPath = photoPath;
+      product.photoURL = photoURL;
     }
     //Add ID PRODUCT
-    state.id = state.reference + state.pinta;
+    product.id = product.reference + product.pinta;
     //FORMATTER sizes AND ADD STATE PRODUCT VALIDATE
-    state.state = formatterSizes(controllerSizes) > 0 ? Strings.productAvailable : Strings.productNotAvailable;
+    product.state = formatterSizes(controllerSizes) > 0 ? Strings.productAvailable : Strings.productNotAvailable;
     //FORMATTER Site
-    state.site = state.site.replaceAll('${Strings.siteProduct} ', '');
-    //UPDATE PRODUCT SIZES
-    await _productService.updateSizesOfProduct(state.id!, sizes);
+    product.site = product.site.replaceAll('${Strings.siteProduct} ', '');
     //UPDATE PRODUCT
-    await _productService.updateProduct(state);
+    await _productService.updateProduct(product).whenComplete(() => validate = true).onError((error, stackTrace) => validate = false);
+    //UPDATE PRODUCT SIZES
+    if(validate){
+      await _productService.updateSizesOfProduct(product.id!, sizes).whenComplete(() => validate = true).onError((error, stackTrace) => validate = false);
+    }
 
-    return true;
+    return validate;
   }
 
   Future <bool> deleteProduct(Product product) async{
-    await _storageService.deletePhoto(product.photoPath);
-    return await _productService.deleteProduct(product.id!);
+    bool validate= false;
+    product.id = product.reference + product.pinta;
+    await _productService.deleteProduct(product.id!).whenComplete(() => validate= true).onError((error, stackTrace) => validate=false);
+    if(validate){
+      await _storageService.deletePhoto(product.photoPath).whenComplete(() => validate= true).onError((error, stackTrace) => validate=false);
+    }
+    return validate;
   }
 
 }

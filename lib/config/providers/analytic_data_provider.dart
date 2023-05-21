@@ -11,6 +11,7 @@ import 'package:navigation_dashboard/domain/use_cases/analytic/analytic_data_use
 import 'package:navigation_dashboard/infrastructure/driven_adapter/db/firebase/analytic/analytic_data_db.dart';
 import 'package:navigation_dashboard/ui/constants/images.dart';
 import 'package:navigation_dashboard/ui/constants/list_element.dart';
+import 'package:navigation_dashboard/ui/widgets/web/drawer/drawer_list.dart';
 import 'package:navigation_design/tokens/colors.dart';
 
 enum ElementsCategoryType{
@@ -30,19 +31,23 @@ enum ElementsCategoryType{
 
 final analyticDataProvider = FutureProvider.family.autoDispose<List<AnalyticData>, List?>((ref, List? externalData) async{
 
-    final int index = ref.watch(drawerIndexProvider);
+    final index = ref.watch(drawerIndexProvider);
+    final indexType = ref.watch(drawerIndexTypeProvider);
     List<AnalyticData> dataCategory = [];
-    final String categoryName;
+    String categoryName = '';
     final AnalyticDataCondition analyticDataCondition;
     List<String> dataTitle = [];
     List<Color?> dataColor = [];
-
-    if(index == 1){
+    if(index == indexType.dashboard){
+      analyticDataCondition = AnalyticDataCondition();
+      dataTitle = ElementsCategoryType.dashboard.dataTitle;
+      dataColor = ElementsCategoryType.dashboard.dataColor;
+    }else if(index == indexType.products){
       categoryName = ref.watch(searchProductsCategoryProvider);
       analyticDataCondition = AnalyticDataCondition(products: externalData?.cast<Product>());
       dataTitle = ElementsCategoryType.products.dataTitle;
       dataColor = ElementsCategoryType.products.dataColor;
-    } else if (index == 5){
+    } else if (index == indexType.users){
       categoryName = ref.watch(searchUsersCategoryProvider);
       analyticDataCondition = AnalyticDataCondition(users: externalData?.cast<User>());
       dataTitle = ElementsCategoryType.users.dataTitle;
@@ -59,7 +64,7 @@ final analyticDataProvider = FutureProvider.family.autoDispose<List<AnalyticData
           title: dataTitle[i],
           color: categoryName == dataTitle[i] ? dataColor[i] : white,
           imageCategory: categoryName == dataTitle[i] ? Images.maskCategoryActivate : Images.maskCategory ,
-          count: await analyticDataCondition.switchCaseCount(index, i),
+          count: await analyticDataCondition.switchCaseCount(index ?? 0, i , indexType),
         ));
     }
     
@@ -77,26 +82,22 @@ class AnalyticDataCondition{
   final List<Order>? orders;
   final AnalyticDataUseCase analytic = AnalyticDataUseCase(AnalyticDataFirestore());
 
-  Future<int> switchCaseCount(int index, int position) async{
-    switch (index){
-      case 0:{
-        return await dashboardCount(position);
-      } 
-      case 1:{
-        return position == 0 
+  Future<int> switchCaseCount(int index, int position, DrawerIndex indexType) async{
+
+    if(index == indexType.dashboard){
+      return await dashboardCount(position);
+    }else if(index == indexType.products){
+      return position == 0 
         ? products!.length 
         : products!.where((p) => ( 0 == p.state.toLowerCase().compareTo(ListElement.productCategoryTitle[position].toLowerCase()))).toList().length;
-      }
-      case 5:{
-        return position == 0 
+    } else if (index == indexType.users){
+      return position == 0 
         ? users!.length 
-        : users!.where((u) => ( 0 == u.state.toLowerCase().compareTo(ListElement.userCategoryTitle[position].toLowerCase()))).toList().length;
-      }
-      case 9:{
-        return position == 0 
+        : users!.where((u) => ( 0 == u.state.toLowerCase().compareTo(ListElement.userCategoryTitle[position].toLowerCase()))).toList().length;  
+    }else if (index == indexType.orders){
+      return position == 0 
         ? orders!.length 
-        : orders!.where((o) => ( 0 == o.state.toLowerCase().compareTo(ListElement.orderCategoryTitle[position].toLowerCase()))).toList().length;
-      }
+        : orders!.where((o) => ( 0 == o.state.toLowerCase().compareTo(ListElement.orderCategoryTitle[position].toLowerCase()))).toList().length;  
     }
     return 0;
   }

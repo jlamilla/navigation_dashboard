@@ -9,6 +9,7 @@ class Strings {
   static const buttonOk = 'Aceptar';
   static const buttonCancel = 'Cancelar';
   static const validateSelect = 'Debe seleccionar una opción del listado.';
+  static const updateState = 'Actualizar';
 
   //Elements state
 
@@ -106,17 +107,19 @@ class Strings {
   static const loading = 'Cargando';
 
   //Auth - register
-  static const auth = 'Ingresar';
+  static const auth = 'INGRESAR';
   static const authTitle = 'Navigation';
   static const out = 'Cerrar sessión';
-  static const authContent = 'Ingresar a tu cuenta';
+  static const authContent = 'Escribe tu correo y contraseña para ingresar';
+  static const authLoading = 'Ingresando...';
+  static const userPasswordResetLoading = 'Restaurando...';
   static const authSignIn = '¿ Ya tienes una cuenta ?';
   static const register = 'Vinculate a Navegation';
   static const authUserEmail = 'Correo electrónico';
   static const authUserPassword = 'Contraseña';
   static const userPasswordReset = 'Restablecer contraseña';
   static const userPasswordResetTitle = 'Restablecer';
-  static const userPasswordResetContent = 'contraseña';
+  static const userPasswordResetContent = 'Escribe tu correo para enviar una nueva contraseña';
   static const emailSendResetPassword = 'Enviar correo';
   static const errorStateUser = 'El usuario se encuentra inactivo';
   static const errorUser = 'El usuario no se encuentra registrado con el correo electrónico suministrado.';
@@ -124,7 +127,8 @@ class Strings {
   static const bondingButton = 'Vincularme';
   static const bondingContext = 'Los datos personales aquí relacionados por usted serán utilizados para los fines de validar la información entregada, promover, proveer, facturar y distribuir los productos, garantizar el servicio postventa de la empresa, establecer un canal para la adecuada comunicación entre CONCEPTO BASICO DE MODA S.A.S. y sus clientes, proveedores, aliados comerciales, etc.; fidelizarlos, hacer investigaciones del cliente, sobre sus gustos, hábitos de consumo, análisis de características demográficas; mejora de la atención, innovar y perfeccionar los productos y servicios ofrecidos, al igual que dar a conocer noticias de interés y novedades; y en general mantener un adecuado conocimiento y comunicación del y con el cliente.';
   static const signOut = 'Cerrar sessión';
-  static const errorRolUser = 'El usuario no cuenta con un rol asignado';
+  static const signAuth = 'Iniciar sessión';
+  static const errorRolUser = 'Este usuario no esta autorizado, comuníquese con el administrador.';
   static const signInValidate = 'Correo y/o contraseña incorrectos';
   static const validatePassword = 'La contraseña proporcionada es demasiado débil';
   static const validateEmail = 'La cuenta ya existe para ese correo electrónico, realiza el proceso de restablecer contraseña';
@@ -153,21 +157,30 @@ class Strings {
   static const warningAlert = '¡Importante!';
   static const helpAlert = 'Recuerda';
   static const deleteTitle = 'Eliminar';
+  static const deleteTitleSize = '¿Confirmas que quieres eliminar la talla seleccionada?';
+  static const deleteTitleUser = '¿Confirmas que quieres eliminar el usuario seleccionado?';
+  static const deleteTitleProduct = '¿Confirmas que quieres eliminar la prenda seleccionada?';
+  static const deleteTitleOrder = '¿Confirmas que quieres eliminar el pedido seleccionado?';
+  static const updateTitleOrder = 'Actualizar Estado';
+  static const updateContentOrder = 'Seleccione el nuevo estado del pedido';
   static const copyAlertContent = 'Información copiada en el portapapeles';
-  static const deleteUserContent = '¿ Esta seguro que desea eliminar el usuario seleccionado?';
+  static const deleteContentUser = 'Si elimina este usuario, no podrá recuperarlo. \n¿Quieres borrarlo?';
+  static const deleteContentOrder = 'Si elimina este pedido, no podrá recuperarlo. \n¿Quieres borrarlo?';
+  static const deleteContentSize = 'Si elimina esta talla, no podrá recuperarla. \n¿Quieres borrarla?';
+  static const deleteContentProduct = 'Si elimina esta prenda, no podrá recuperarla. \n¿Quieres borrarla?';
   static const deleteUserAlert = 'Se ha elimino el usuario exitosamente.';
   static const deleteProductAlert = 'Se ha elimino el producto exitosamente.';
   static const deleteOrderAlert = 'Se ha elimino la orden exitosamente.';
   static const warningProductSizeAlert = 'Necesita por lo menos agregar una talla para crear la prenda exitosamente.';
   static const errorCreateProductAlert = 'Algo ah salido mal vuelva a intentar crear la prenda.';
-  static const deleteProductSizeContent = '¿ Seguro quiere eliminar la talla seleccionada?';
   static const successDeleteProductSizeAlert = 'Se ha eliminado con exito la talla';
   static const errorDeleteProductSizeAlert = 'Por favor seleccione por lo menos una talla para eliminar';
-  static const helpProductSizeMaxContent = 'La cantidad maxima de tallas por prenda es de 9.';
   static const successProductContent = 'La prenda con ID';
+  static const successOrderContent = 'El pedido con ID';
   static const successUserContent = 'El usuario con C.C.';
   static const successCreateContent = 'se ha creado exitosamente';
   static const successUpdateContent = 'se ha actualizaco exitosamente';
+  static const successDeleteContent = 'se ha eliminado exitosamente';
   static const errorFormContent = 'Por favor ingresar todos los datos del formulario para continuar.';
   static const successUpdateProductSizeContent = 'Se han actualizado las tallas de forma exitosa.';
   static const errorUpdateProductSizeContent = 'Algo ah salido mal vuelva a intentar crear la prenda.';

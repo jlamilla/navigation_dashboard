@@ -1,14 +1,23 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:navigation_dashboard/domain/models/user/user_model.dart';
+import 'package:navigation_dashboard/domain/use_cases/auth/auth_use_case.dart';
 import 'package:navigation_dashboard/domain/use_cases/photo/photo_use_case.dart';
 import 'package:navigation_dashboard/domain/use_cases/user/user_use_case.dart';
+import 'package:navigation_dashboard/infrastructure/driven_adapter/db/firebase/auth/auth_db.dart';
 import 'package:navigation_dashboard/infrastructure/driven_adapter/db/firebase/photo/photo_db.dart';
 import 'package:navigation_dashboard/infrastructure/driven_adapter/db/firebase/user/user_db.dart';
 import 'package:navigation_dashboard/infrastructure/helpers/app_persistent_store.dart';
 import 'package:navigation_dashboard/ui/constants/list_element.dart';
+import 'package:uuid/uuid.dart';
 
-final userProvider = StateNotifierProvider<UserNotifier , User?>((ref) => UserNotifier());
+final userProvider = StateNotifierProvider.autoDispose<UserNotifier , User?>((ref) {
+  ref.keepAlive();
+  return UserNotifier();
+});
+
+final userSelectProvider = StateProvider.autoDispose<User?>((ref) => null);
+
 final userStatusStreamProvider = StreamProvider.autoDispose<User>(
     (ref) async*{
       yield* UserUseCase(UserFirestore()).getUserStatus(AppPersistentStore.getUserId()!);
@@ -16,48 +25,43 @@ final userStatusStreamProvider = StreamProvider.autoDispose<User>(
 );
 final usersFutureProvider = FutureProvider.autoDispose<List<User>>((ref) async{
       final users = await UserUseCase(UserFirestore()).getUsers();
-      ref.keepAlive();
       return users;
     } 
 );
-final userDepartmentMunicipal = StateProvider.autoDispose<DepartmentCityType>((ref) => DepartmentCityType.select);
+
+final userDepartmentMunicipal = StateProvider.autoDispose<DepartmentCityType?>((ref) => null);
 final userColorState = StateProvider.autoDispose<CardColorUserState?>((ref) => null);
 final userProfileProvider = Provider<User?>((ref) => null);
-final userDataTreatment = StateProvider<bool>((ref) => false);
 
 class UserNotifier extends StateNotifier<User?> {
 
   final UserUseCase _userService = UserUseCase(UserFirestore());
   final PhotoUseCase _photoService = PhotoUseCase(PhotoStorage());
-  User? userProfile;
+  final AuthUseCase _authService = AuthUseCase(AuthFirebase());
 
   UserNotifier():super(null);
 
-  Future <bool> createSellerData(User newUser,String userId, XFile? photo) async {
+  Future <bool> addUser(User newUser, XFile? photo,) async {
 
-    newUser.id = userId;
-    
-    if(photo != null){
-      String photoPath  = await _photoService.uploadPhoto(CollectionStorage.users, newUser.id! , photo );
-      String photoURL = await _photoService.downloadURL(photoPath);
-      newUser.photoPath = photoPath;
-      newUser.photoURL = photoURL;
-    }else{
-      newUser.photoPath = '';
-      newUser.photoURL = '';
+    final password = const Uuid().v4();
+    final mapValidate = await _authService.createUserWithEmailAndPassword(newUser.email, password);
+    if(mapValidate.values.toList()[0]){
+      newUser.id = mapValidate.keys.toList()[0];
+      _authService.restorePasswordByEmail(newUser.email);
+      if(photo != null){
+        String photoPath  = await _photoService.uploadPhoto(CollectionStorage.users, newUser.id! , photo );
+        String photoURL = await _photoService.downloadURL(photoPath);
+        newUser.photoPath = photoPath;
+        newUser.photoURL = photoURL;
+      }else{
+        newUser.photoPath = '';
+        newUser.photoURL = '';
+      }
+      newUser.dateCreate = DateTime.now().toString();
+      newUser.dateUpdate = DateTime.now().toString();
+      return await _userService.createUserWithEmailAndPassword(newUser);
     }
-    return await _userService.createUserWithEmailAndPassword(newUser);
-  }
-
-  Future <bool> addUser(User newUser) async {
-    newUser.photoPath = '';
-    newUser.photoURL = '';
-    newUser.department = 'Valle del Cauca';
-    newUser.city = 'Cali';
-    newUser.address = 'Av. 5b Nte. #21';
-    newUser.dateCreate = DateTime.now().toString();
-    newUser.dateUpdate = DateTime.now().toString();
-    return await _userService.createUserWithEmailAndPassword(newUser);
+    return false;
   }
 
   Future <bool> getUser(String email) async {
@@ -70,24 +74,26 @@ class UserNotifier extends StateNotifier<User?> {
 
   Future <bool> updateUser(User selectUser, XFile? photo) async {
     
-      selectUser.dateUpdate = DateTime.now().toString();
+    bool validate = false;
       
-      if(photo != null){
+    if(photo != null){
+      selectUser.photoPath.isNotEmpty ? await _photoService.deletePhoto(selectUser.photoPath): null;
+      String photoPath  = await _photoService.uploadPhoto(CollectionStorage.users, selectUser.id! , photo );
+      String photoURL = await _photoService.downloadURL(photoPath);
+      selectUser.photoPath = photoPath;
+      selectUser.photoURL = photoURL;
+    }
+    
+    await _userService.updateUser(selectUser).whenComplete(() => validate = true);
 
-        selectUser.photoPath.isNotEmpty ? await _photoService.deletePhoto(selectUser.photoPath): null;
-        String photoPath  = await _photoService.uploadPhoto(CollectionStorage.users, selectUser.id! , photo );
-        String photoURL = await _photoService.downloadURL(photoPath);
-
-        selectUser.photoPath = photoPath;
-        selectUser.photoURL = photoURL;
-      }
-
-    return await _userService.updateUser(selectUser);
+    return validate;
   }
 
-  deleteUser(User selectUser) async {
+  Future<bool> deleteUser(User selectUser) async {
+    bool validate = false;
     selectUser.photoPath.isNotEmpty ? await _photoService.deletePhoto(selectUser.photoPath): null;
-    _userService.deleteUserById(selectUser.id!);
+    await _userService.deleteUserById(selectUser.id!).whenComplete(() => validate = true);
+    return validate;
   }
 
   Future updateUserStatus() async{

@@ -1,5 +1,4 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:navigation_dashboard/infrastructure/helpers/app_persistent_store.dart';
 import 'app/app_state.dart';

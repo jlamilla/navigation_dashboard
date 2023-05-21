@@ -43,6 +43,7 @@ dependencies:
   flutter_riverpod: ^2.2.0
   flutter_svg: ^2.0.5
   fluent_ui: ^4.5.0
+  fl_chart: ^0.62.0
   image_cropper: ^3.0.2
   image_picker: ^0.8.7+4
   intl: ^0.17.0
