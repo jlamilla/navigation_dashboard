@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:navigation_dashboard/config/providers/auth_provider.dart';
 import 'package:navigation_dashboard/ui/constants/roles.dart';
-import 'package:navigation_dashboard/ui/pages/home/components/dashboard_content_screen.dart';
+import 'package:navigation_dashboard/ui/pages/web/home/components/dashboard_content_screen.dart';
 import 'package:navigation_dashboard/ui/widgets/web/drawer/drawer_list.dart';
 
 final drawerProvider = StateProvider<Widget>((ref) => const DashboardContentScreen());

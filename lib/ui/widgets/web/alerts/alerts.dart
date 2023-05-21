@@ -1,6 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:navigation_dashboard/ui/constants/strings.dart';
-import 'package:navigation_design/tokens/colors.dart';
 
 class AlertCustom{
   Future <bool> showContentDialog({ required BuildContext context, required Function()? action, required String title, required String content}) async{

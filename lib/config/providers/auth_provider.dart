@@ -1,5 +1,3 @@
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:navigation_dashboard/domain/models/user/user_model.dart';
 import 'package:navigation_dashboard/domain/use_cases/auth/auth_use_case.dart';

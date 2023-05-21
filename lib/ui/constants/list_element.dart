@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:navigation_dashboard/infrastructure/helpers/fields.dart';
 import 'package:navigation_dashboard/ui/constants/images.dart';
 import 'package:navigation_dashboard/ui/constants/roles.dart';
 import 'package:navigation_dashboard/ui/constants/strings.dart';

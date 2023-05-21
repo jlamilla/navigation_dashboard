@@ -21,7 +21,6 @@ class PhotoStorage extends PhotoRepository{
     String photoId = const Uuid().v4();
     String collection = (collectionStorage == CollectionStorage.products) ? Collections.products : Collections.users;
     String storagePath = '$collection/$id/$photoId.jpg';
-    print(photo);
     log(photo.toString());
     try{
       final ref = _storage.ref().child(storagePath);

@@ -7,7 +7,6 @@ import 'package:navigation_dashboard/domain/models/order/repository/order_reposi
 import 'package:navigation_dashboard/domain/models/product/product_model.dart';
 import 'package:navigation_dashboard/infrastructure/driven_adapter/db/firebase/order/error/order_db_error.dart';
 import 'package:navigation_dashboard/infrastructure/helpers/collections.dart';
-import 'package:navigation_dashboard/infrastructure/helpers/fields.dart';
 import 'package:navigation_dashboard/infrastructure/helpers/formatter.dart';
 
 class OrderFirestore extends OrderRepository{

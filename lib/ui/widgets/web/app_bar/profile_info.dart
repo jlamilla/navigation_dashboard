@@ -1,11 +1,9 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:navigation_dashboard/config/providers/auth_provider.dart';
 import 'package:navigation_dashboard/config/providers/drawer_provider.dart';
 import 'package:navigation_dashboard/config/providers/image_provider.dart';
 import 'package:navigation_dashboard/config/providers/user_provider.dart';
-import 'package:navigation_dashboard/infrastructure/helpers/app_screen.dart';
 import 'package:navigation_dashboard/ui/constants/images.dart';
 import 'package:navigation_dashboard/ui/constants/list_element.dart';
 import 'package:navigation_design/atoms/nd_image.dart';

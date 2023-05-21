@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:navigation_dashboard/ui/pages/auth/components/detail_side.dart';
-import 'package:navigation_dashboard/ui/pages/auth/components/switcher_side.dart';
+import 'package:navigation_dashboard/ui/pages/auth/detail_side.dart';
+import 'package:navigation_dashboard/ui/pages/auth/switcher_side.dart';
 
 
 class AuthPage extends StatefulWidget {

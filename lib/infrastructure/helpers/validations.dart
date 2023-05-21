@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:navigation_dashboard/ui/constants/list_element.dart';
 import 'package:navigation_dashboard/ui/constants/strings.dart';
 
