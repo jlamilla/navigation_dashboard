@@ -103,56 +103,53 @@ class UserCard extends ConsumerWidget {
         children: [
           CardImageUser(cardInfo: cardInfo, user: userInfo, drawer: drawer),
           UserCardContentInfo(userInfo: userInfo),
-          Visibility(
-            visible: userInfo.rol.compareTo(Roles.seller) == 0 || userInfo.id?.compareTo(userProfile.id ?? '') == 0,
-            child: CardButtons( 
-              userId: userInfo.id!,
-              onPressedButtonEdit: (){
-                ref.watch(photoURLProvider.notifier).update((state) => state = userInfo.photoURL);
-                ref.watch(userSelectProvider.notifier).update((state) => state = userInfo);
-                final userStateColor = CardColorUserState.values.where((element) => element.state.compareTo(userInfo.state) == 0).toList();
-                ref.watch(userColorState.notifier).update((state) => state = userStateColor[0] );
-                final userDepartment = DepartmentCityType.values.where((element) => element.department.compareTo(userInfo.department) == 0).toList();
-                ref.watch(userDepartmentMunicipal.notifier).update((state) => state = userDepartment[0] );
-                ref.watch(drawerIndexProvider.notifier).update((state) => state = drawer.userUpdate);
-              },
-              onPressedButtonDelete: () async{
-                final validate = await AlertCustom().showContentDialog(
-                  title: Strings.deleteTitleUser, 
-                  content: Strings.deleteContentUser,
-                  context: context, 
-                  action: () async{
-                    return Navigator.pop(context, await ref.read(userProvider.notifier).deleteUser(userInfo));
-                  }, 
-                );
-                if(validate && context.mounted){
-                  ref.watch(drawerIndexProvider.notifier).update((state) => state = drawer.dashboard);
-                  displayInfoBar(context, duration: const Duration(seconds: 5), builder: (context, close){
-                    return InfoBar(
-                      title: const Text(Strings.successAlert),
-                      content: Text('${Strings.successUserContent} ${userInfo.dni} ${Strings.successDeleteContent}'),
-                      action: IconButton(
-                        icon: const Icon(FluentIcons.clear),
-                        onPressed: close,
-                      ),
-                      severity: InfoBarSeverity.success,
-                    );
-                  });    
-                }else{
-                  displayInfoBar(context, duration: const Duration(seconds: 5), builder: (context, close){
-                    return InfoBar(
-                      title: const Text(Strings.errorAlert),
-                      content: Text('${Strings.successUserContent} ${userInfo.dni} no ${Strings.successDeleteContent}'),
-                      action: IconButton(
-                        icon: const Icon(FluentIcons.clear),
-                        onPressed: close,
-                      ),
-                      severity: InfoBarSeverity.error,
-                    );
-                  });
-                }
-              },
-            ),
+          CardButtons( 
+            userId: userInfo.id!,
+            onPressedButtonEdit: (){
+              ref.watch(photoURLProvider.notifier).update((state) => state = userInfo.photoURL);
+              ref.watch(userSelectProvider.notifier).update((state) => state = userInfo);
+              final userStateColor = CardColorUserState.values.where((element) => element.state.compareTo(userInfo.state) == 0).toList();
+              ref.watch(userColorState.notifier).update((state) => state = userStateColor[0] );
+              final userDepartment = DepartmentCityType.values.where((element) => element.department.compareTo(userInfo.department) == 0).toList();
+              ref.watch(userDepartmentMunicipal.notifier).update((state) => state = userDepartment[0] );
+              ref.watch(drawerIndexProvider.notifier).update((state) => state = drawer.userUpdate);
+            },
+            onPressedButtonDelete: () async{
+              final validate = await AlertCustom().showContentDialog(
+                title: Strings.deleteTitleUser, 
+                content: Strings.deleteContentUser,
+                context: context, 
+                action: () async{
+                  return Navigator.pop(context, await ref.read(userProvider.notifier).deleteUser(userInfo));
+                }, 
+              );
+              if(validate && context.mounted){
+                ref.watch(drawerIndexProvider.notifier).update((state) => state = drawer.dashboard);
+                displayInfoBar(context, duration: const Duration(seconds: 5), builder: (context, close){
+                  return InfoBar(
+                    title: const Text(Strings.successAlert),
+                    content: Text('${Strings.successUserContent} ${userInfo.dni} ${Strings.successDeleteContent}'),
+                    action: IconButton(
+                      icon: const Icon(FluentIcons.clear),
+                      onPressed: close,
+                    ),
+                    severity: InfoBarSeverity.success,
+                  );
+                });    
+              }else{
+                displayInfoBar(context, duration: const Duration(seconds: 5), builder: (context, close){
+                  return InfoBar(
+                    title: const Text(Strings.errorAlert),
+                    content: Text('${Strings.successUserContent} ${userInfo.dni} no ${Strings.successDeleteContent}'),
+                    action: IconButton(
+                      icon: const Icon(FluentIcons.clear),
+                      onPressed: close,
+                    ),
+                    severity: InfoBarSeverity.error,
+                  );
+                });
+              }
+            },
           )
         ],
       ),
@@ -191,9 +188,9 @@ class UserCardContentInfo extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const Icon(FluentIcons.mail, color: grey, size: 20),
+                const Icon(FluentIcons.info, color: grey, size: 20),
                 const SizedBox(width: 5,),
-                Text(userInfo.email),
+                Text(userInfo.rol),
               ],
             ),
           ),

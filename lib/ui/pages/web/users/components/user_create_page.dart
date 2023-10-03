@@ -158,8 +158,7 @@ class UserProfileCreateState extends ConsumerState<UserProfileCreate> {
               ),
               TextUser(
                 title: Fields.landline, 
-                controller: _landlineController, 
-                validator: (value) => Validations.validateNoEmpty(value),
+                controller: _landlineController,
                 type: TextInputType.text,
               ),
             ],

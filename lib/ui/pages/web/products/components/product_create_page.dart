@@ -296,7 +296,7 @@ class ProductDetailsCreateState extends ConsumerState<ProductDetailsCreate> {
                                 controller: _descriptionController,
                                 maxLength: 200,
                                 maxLines: null,
-                                validator: (value) => Validations.validateNoEmptyString(value),
+                                validator: (value) => Validations.validateNoEmpty(value),
                         ),
                       ),
                       !ref.watch(productSizeContinueProvider) 

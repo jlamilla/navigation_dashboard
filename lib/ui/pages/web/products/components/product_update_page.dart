@@ -300,7 +300,7 @@ class ProductDetailsUpdateState extends ConsumerState<ProductDetailsUpdate> {
                           controller: _descriptionController,
                           maxLength: 200,
                           maxLines: null,
-                          validator: (value) => Validations.validateNoEmptyString(value),
+                          validator: (value) => Validations.validateNoEmpty(value),
                         ),
                       ),
                       ButtonLoading(

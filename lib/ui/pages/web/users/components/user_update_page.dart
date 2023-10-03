@@ -260,7 +260,7 @@ class UserProfileUpdateState extends ConsumerState<UserProfileUpdate> {
                       displayInfoBar(context, builder: (context, close) {
                         return InfoBar(
                           title: const Text(Strings.successAlert),
-                          content: Text('${Strings.successUserContent} ${widget.user.dni} ${Strings.successCreateContent}'),
+                          content: Text('${Strings.successUserContent} ${widget.user.dni} ${Strings.successUpdateContent}'),
                           action: IconButton(
                             icon: const Icon(FluentIcons.clear),
                             onPressed: close,
@@ -273,7 +273,7 @@ class UserProfileUpdateState extends ConsumerState<UserProfileUpdate> {
                       displayInfoBar(context, duration: const Duration(seconds: 5), builder: (context, close){
                         return InfoBar(
                           title: const Text(Strings.errorAlert),
-                          content: Text('${Strings.successUserContent} ${widget.user.dni} no ${Strings.successCreateContent}'),
+                          content: Text('${Strings.successUserContent} ${widget.user.dni} no ${Strings.successUpdateContent}'),
                           action: IconButton(
                             icon: const Icon(FluentIcons.clear),
                             onPressed: close,

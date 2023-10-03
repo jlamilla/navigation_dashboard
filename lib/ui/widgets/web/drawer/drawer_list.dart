@@ -1,3 +1,4 @@
+import 'dart:html';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:navigation_dashboard/ui/constants/strings.dart';
 import 'package:navigation_dashboard/ui/pages/web/home/components/dashboard_content_screen.dart';
@@ -7,7 +8,6 @@ import 'package:navigation_dashboard/ui/pages/web/products/components/product_cr
 import 'package:navigation_dashboard/ui/pages/web/products/components/product_details_page.dart';
 import 'package:navigation_dashboard/ui/pages/web/products/components/product_update_page.dart';
 import 'package:navigation_dashboard/ui/pages/web/products/products_page.dart';
-import 'package:navigation_dashboard/ui/pages/web/tutorials.dart';
 import 'package:navigation_dashboard/ui/pages/web/users/components/user_create_page.dart';
 import 'package:navigation_dashboard/ui/pages/web/users/components/user_details_page.dart';
 import 'package:navigation_dashboard/ui/pages/web/users/components/user_update_page.dart';
@@ -124,15 +124,26 @@ class DrawerList{
                 ],
             ),
             PaneItemSeparator(),
-            PaneItem(
-              title: const Text(Strings.tutorial, style: TextStyle(fontSize: 16),), 
-              icon: const Icon(FluentIcons.contact), 
-              body: const NavigationBodyItem(
-                      header: Strings.tutorial,
-                      content: TutorialsPage(),
-                    ),
+            PaneItemAction(
+              title: const Text(Strings.guideUser, style: TextStyle(fontSize: 16),), 
+              icon: const Icon(FluentIcons.download_document),
+              onTap: () {
+                AnchorElement anchorElement = AnchorElement(href: "../assets/guides/guideUser.pdf");
+                anchorElement.download = Strings.guideUserNameFile;
+                anchorElement.click();
+              },
+            ),
+            PaneItemAction(
+              title: const Text(Strings.guideDeveloper, style: TextStyle(fontSize: 16),), 
+              icon: const Icon(FluentIcons.download_document),
+              onTap: () {
+                AnchorElement anchorElement = AnchorElement(href: "../assets/guides/guideDeveloper.pdf");
+                anchorElement.download = Strings.guideDeveloperNameFile;
+                anchorElement.click();
+              },
             ),
           ];
+
   static List<NavigationPaneItem> itemsCommercial = [
             PaneItemExpander(
               title: const Text(Strings.products, style: TextStyle(fontSize: 16),), 
@@ -207,13 +218,14 @@ class DrawerList{
                 ],
             ),
             PaneItemSeparator(),
-            PaneItem(
-              title: const Text(Strings.tutorial, style: TextStyle(fontSize: 16),), 
-              icon: const Icon(FluentIcons.contact), 
-              body: const NavigationBodyItem(
-                      header: Strings.tutorial,
-                      content: TutorialsPage(),
-                    ),
+            PaneItemAction(
+              title: const Text(Strings.guideUser, style: TextStyle(fontSize: 16),), 
+              icon: const Icon(FluentIcons.download_document),
+              onTap: () {
+                AnchorElement anchorElement = AnchorElement(href: "../assets/guides/guideUser.pdf");
+                anchorElement.download = Strings.guideUserNameFile;
+                anchorElement.click();
+              },
             ),
           ];
   

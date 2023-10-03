@@ -1,6 +1,10 @@
 class Strings {
 
   static const optionsMenu = 'Menú de opciones';
+  static const guideUser = 'Guía de usuario';
+  static const guideDeveloper = 'Guía de desarrollador';
+  static const guideDeveloperNameFile = 'Guía de desarrollador versión multiplataforma';
+  static const guideUserNameFile = 'Guía de usuario versión web';
   static const select = 'Seleccionar';
   static const settings = 'Ajustes';
   static const dashboard = 'Panel principal';

@@ -32,10 +32,10 @@ class ProfileInfo extends ConsumerWidget {
         child: Row(
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(30),
+              borderRadius: BorderRadius.circular(360),
               child: userProfile.photoURL.isEmpty 
-                      ? const OurAssetImage(assetName: Images.noPhoto, heightImage: 70, placeholder: Images.loading)
-                      : OurNetworkImage(url: userProfile.photoURL, heightImage: 70, placeholder: Images.loading)
+                      ? const OurAssetImage(assetName: Images.noPhoto, heightImage: 70, widthImage: 70, placeholder: Images.loading)
+                      : OurNetworkImage(url: userProfile.photoURL, heightImage: 70, widthImage: 70, placeholder: Images.loading)
             ),
             const SizedBox(width: 10,),
             Column(

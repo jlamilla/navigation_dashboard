@@ -1,3 +1,7 @@
+import 'dart:html';
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:navigation_dashboard/config/providers/auth_provider.dart';
@@ -7,6 +11,7 @@ import 'package:navigation_dashboard/ui/constants/strings.dart';
 import 'package:navigation_dashboard/ui/widgets/web/app_bar/profile_info.dart';
 import 'package:navigation_dashboard/ui/widgets/web/app_bar/search_field.dart';
 import 'package:navigation_dashboard/ui/widgets/web/drawer/drawer_list.dart';
+import 'package:path_provider/path_provider.dart';
 
 class DrawerMenu extends ConsumerWidget {
   const DrawerMenu({super.key});
@@ -15,9 +20,16 @@ class DrawerMenu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final index = ref.watch(drawerIndexProvider);
     final user = ref.watch(authProvider.notifier).userProfile;
+    final onPressed = Navigator.canPop(context) ? () => Navigator.pop(context) : null;
+
     return NavigationView(
-        appBar: const NavigationAppBar(
-          title: Text(Strings.navigation),
+        appBar: NavigationAppBar(
+          automaticallyImplyLeading: false,
+          title: const Text(Strings.navigation),
+          leading:  IconButton(
+                        icon: const Center(child: Icon(FluentIcons.back, size: 12.0)), 
+                        onPressed: onPressed
+                    )
         ),
         pane: NavigationPane(
           header: const ProfileInfo(),
@@ -36,7 +48,6 @@ class DrawerMenu extends ConsumerWidget {
       );
   }
 }
-
 class NavigationBodyItem extends StatelessWidget {
   const NavigationBodyItem({
     Key? key,
